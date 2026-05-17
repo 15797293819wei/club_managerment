@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="89fb0a00-f95a-4c20-a2c8-e4398299710a" name="更改" comment="">
+      <change beforePath="$PROJECT_DIR$/../server/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../server/.idea/workspace.xml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/src/views/login/ForgotPasswordView.vue" root0="FORCE_HIGHLIGHTING" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 2
+}</component>
+  <component name="ProjectId" id="35gYCb9BboSqvzVxZkiHTOgk7Xl" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;JavaScript 调试.localhost:5173.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;Notification.DisplayName-DoNotAsk-JavaScript: Code Vision Performance&quot;: &quot;JavaScript: Code Vision 性能观察程序&quot;,
+    &quot;Notification.DoNotAsk-JavaScript: Code Vision Performance&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/AllTest/Club-Management/web&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;npm.dev.executor&quot;: &quot;Run&quot;,
+    &quot;npm.install.executor&quot;: &quot;Run&quot;,
+    &quot;prettier.import.notification.dismissed&quot;: &quot;true&quot;,
+    &quot;prettierjs.PrettierConfiguration.Package&quot;: &quot;D:\\AllTest\\Club-Management\\web\\node_modules\\prettier&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;D:\\AllTest\\Club-Management\\web\\node_modules\\typescript\\lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="RunManager" selected="npm.dev">
+    <configuration name="localhost:5173" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:5173/">
+      <method v="2" />
+    </configuration>
+    <configuration name="dev" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="dev" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JavaScript 调试.localhost:5173" />
+        <item itemvalue="npm.dev" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-3aa1da707db6-JavaScript-WS-252.27397.92" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="默认任务">
+      <changelist id="89fb0a00-f95a-4c20-a2c8-e4398299710a" name="更改" comment="" />
+      <created>1763533055873</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1763533055873</updated>
+      <workItem from="1763533057544" duration="184000" />
+      <workItem from="1763533319934" duration="268000" />
+      <workItem from="1763533603045" duration="243000" />
+      <workItem from="1763533864160" duration="202000" />
+      <workItem from="1763622270874" duration="389000" />
+      <workItem from="1763622934776" duration="120000" />
+      <workItem from="1763719930311" duration="30000" />
+      <workItem from="1764341445333" duration="30000" />
+      <workItem from="1765380241149" duration="3000" />
+      <workItem from="1767496309815" duration="476000" />
+      <workItem from="1767496807143" duration="1466000" />
+      <workItem from="1767782387381" duration="130000" />
+      <workItem from="1767782526497" duration="359000" />
+      <workItem from="1767782905183" duration="53000" />
+      <workItem from="1767782978329" duration="70000" />
+      <workItem from="1767783055707" duration="64000" />
+      <workItem from="1769135799784" duration="588000" />
+      <workItem from="1769150919968" duration="721000" />
+      <workItem from="1769598748869" duration="320000" />
+      <workItem from="1769599296162" duration="98000" />
+      <workItem from="1769599801776" duration="442000" />
+      <workItem from="1769601375775" duration="423000" />
+      <workItem from="1769602042948" duration="1575000" />
+      <workItem from="1769603662979" duration="471000" />
+      <workItem from="1769604162609" duration="4573000" />
+      <workItem from="1769653398359" duration="437000" />
+      <workItem from="1769653852269" duration="2438000" />
+      <workItem from="1769761507337" duration="3573000" />
+      <workItem from="1769767299275" duration="421000" />
+      <workItem from="1769768123799" duration="142000" />
+      <workItem from="1770106018570" duration="2000" />
+      <workItem from="1770189384850" duration="3000" />
+      <workItem from="1770189399000" duration="613000" />
+      <workItem from="1770890179344" duration="208000" />
+      <workItem from="1771735091100" duration="986000" />
+      <workItem from="1772121363403" duration="1676000" />
+      <workItem from="1773560665164" duration="2238000" />
+      <workItem from="1773563580297" duration="2845000" />
+      <workItem from="1773571644153" duration="70000" />
+      <workItem from="1773646078029" duration="610000" />
+      <workItem from="1773650817271" duration="699000" />
+      <workItem from="1773714228498" duration="2271000" />
+      <workItem from="1773733074955" duration="1957000" />
+      <workItem from="1773809416145" duration="1379000" />
+      <workItem from="1773811898609" duration="653000" />
+      <workItem from="1773901915630" duration="638000" />
+      <workItem from="1775305656945" duration="157000" />
+      <workItem from="1776065361308" duration="250000" />
+      <workItem from="1776249860018" duration="96000" />
+      <workItem from="1776651520549" duration="640000" />
+      <workItem from="1776652239861" duration="595000" />
+      <workItem from="1776749055460" duration="3744000" />
+      <workItem from="1778318334463" duration="306000" />
+      <workItem from="1778372405315" duration="181000" />
+      <workItem from="1778388019782" duration="2024000" />
+      <workItem from="1778760950318" duration="240000" />
+      <workItem from="1779002599784" duration="4000" />
+      <workItem from="1779002704293" duration="147000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
