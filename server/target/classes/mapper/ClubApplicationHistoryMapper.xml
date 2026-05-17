@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.club.mapper.ClubApplicationHistoryMapper">
+
+  <resultMap id="HistoryMap" type="com.example.club.domain.ClubApplicationHistory">
+    <id column="id" property="id"/>
+    <result column="application_id" property="applicationId"/>
+    <result column="reviewer_id" property="reviewerId"/>
+    <result column="status" property="status"/>
+    <result column="review_comment" property="reviewComment"/>
+    <result column="created_time" property="createdTime"/>
+  </resultMap>
+
+  <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="com.example.club.domain.ClubApplicationHistory">
+    insert into club_application_history (
+      application_id, reviewer_id, status, review_comment, created_time
+    ) values (
+      #{applicationId}, #{reviewerId}, #{status}, #{reviewComment}, #{createdTime}
+    )
+  </insert>
+
+  <select id="selectByApplicationId" resultMap="HistoryMap">
+    select
+    id, application_id, reviewer_id, status, review_comment, created_time
+    from club_application_history
+    where application_id = #{applicationId}
+    order by created_time desc
+  </select>
+
+</mapper>
+

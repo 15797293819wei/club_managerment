@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.club.mapper.ClubDissolutionApplicationMapper">
+
+  <resultMap id="ClubDissolutionApplicationMap" type="com.example.club.domain.ClubDissolutionApplication">
+    <id column="id" property="id"/>
+    <result column="club_id" property="clubId"/>
+    <result column="applicant_id" property="applicantId"/>
+    <result column="reason" property="reason"/>
+    <result column="status" property="status"/>
+    <result column="reviewer_id" property="reviewerId"/>
+    <result column="review_time" property="reviewTime"/>
+    <result column="review_comment" property="reviewComment"/>
+    <result column="created_time" property="createdTime"/>
+    <result column="updated_time" property="updatedTime"/>
+  </resultMap>
+
+  <sql id="BaseColumns">
+    id, club_id, applicant_id, reason, status,
+    reviewer_id, review_time, review_comment, created_time, updated_time
+  </sql>
+
+  <insert id="insert" parameterType="com.example.club.domain.ClubDissolutionApplication" useGeneratedKeys="true" keyProperty="id">
+    insert into club_dissolution_applications (
+      club_id, applicant_id, reason, status
+    ) values (
+      #{clubId}, #{applicantId}, #{reason}, #{status}
+    )
+  </insert>
+
+  <select id="selectById" resultMap="ClubDissolutionApplicationMap">
+    select
+    <include refid="BaseColumns"/>
+    from club_dissolution_applications
+    where id = #{id}
+  </select>
+
+  <select id="countPendingByClubId" resultType="long">
+    select count(1)
+    from club_dissolution_applications
+    where club_id = #{clubId}
+      and status = 0
+  </select>
+
+  <update id="updateById" parameterType="com.example.club.domain.ClubDissolutionApplication">
+    update club_dissolution_applications
+    <set>
+      <if test="reason != null">reason = #{reason},</if>
+      <if test="status != null">status = #{status},</if>
+      <if test="reviewerId != null">reviewer_id = #{reviewerId},</if>
+      <if test="reviewTime != null">review_time = #{reviewTime},</if>
+      <if test="reviewComment != null">review_comment = #{reviewComment},</if>
+    </set>
+    where id = #{id}
+  </update>
+
+</mapper>
+

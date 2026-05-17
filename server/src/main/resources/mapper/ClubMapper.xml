@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.club.mapper.ClubMapper">
+
+  <resultMap id="ClubMap" type="com.example.club.domain.Club">
+    <id column="id" property="id"/>
+    <result column="club_name" property="clubName"/>
+    <result column="club_code" property="clubCode"/>
+    <result column="description" property="description"/>
+    <result column="purpose" property="purpose"/>
+    <result column="constitution" property="constitution"/>
+    <result column="logo" property="logo"/>
+    <result column="contact_person" property="contactPerson"/>
+    <result column="contact_phone" property="contactPhone"/>
+    <result column="contact_email" property="contactEmail"/>
+    <result column="founder_id" property="founderId"/>
+    <result column="president_id" property="presidentId"/>
+    <result column="member_count" property="memberCount"/>
+    <result column="status" property="status"/>
+    <result column="established_time" property="establishedTime"/>
+    <result column="created_time" property="createdTime"/>
+    <result column="updated_time" property="updatedTime"/>
+  </resultMap>
+
+  <sql id="BaseColumns">
+    id, club_name, club_code, description, purpose, constitution, logo,
+    contact_person, contact_phone, contact_email, founder_id, president_id,
+    member_count, status, established_time, created_time, updated_time
+  </sql>
+
+  <select id="selectById" resultMap="ClubMap">
+    select
+    <include refid="BaseColumns"/>
+    from clubs
+    where id = #{id}
+  </select>
+
+  <select id="selectByClubName" resultMap="ClubMap">
+    select
+    <include refid="BaseColumns"/>
+    from clubs
+    where club_name = #{clubName}
+  </select>
+
+  <select id="selectByClubCode" resultMap="ClubMap">
+    select
+    <include refid="BaseColumns"/>
+    from clubs
+    where club_code = #{clubCode}
+  </select>
+
+  <select id="countByFilters" resultType="long">
+    select count(1)
+    from clubs
+    <where>
+      <if test="keyword != null and keyword != ''">
+        (club_name like concat('%', #{keyword}, '%')
+        or club_code like concat('%', #{keyword}, '%'))
+      </if>
+      <if test="status != null">
+        and status = #{status}
+      </if>
+      <if test="founderId != null">
+        and founder_id = #{founderId}
+      </if>
+      <if test="minMemberCount != null">
+        and member_count &gt;= #{minMemberCount}
+      </if>
+      <if test="maxMemberCount != null">
+        and member_count &lt;= #{maxMemberCount}
+      </if>
+    </where>
+  </select>
+
+  <select id="selectPage" resultMap="ClubMap">
+    select
+    <include refid="BaseColumns"/>
+    from clubs
+    <where>
+      <if test="keyword != null and keyword != ''">
+        (club_name like concat('%', #{keyword}, '%')
+        or club_code like concat('%', #{keyword}, '%'))
+      </if>
+      <if test="status != null">
+        and status = #{status}
+      </if>
+      <if test="founderId != null">
+        and founder_id = #{founderId}
+      </if>
+      <if test="minMemberCount != null">
+        and member_count &gt;= #{minMemberCount}
+      </if>
+      <if test="maxMemberCount != null">
+        and member_count &lt;= #{maxMemberCount}
+      </if>
+    </where>
+    order by
+    <choose>
+      <when test="sortField != null and sortField != ''">
+        ${sortField}
+      </when>
+      <otherwise>
+        created_time
+      </otherwise>
+    </choose>
+    <choose>
+      <when test="sortOrder != null and sortOrder == 'asc'">
+        asc
+      </when>
+      <otherwise>
+        desc
+      </otherwise>
+    </choose>
+    limit #{size} offset #{offset}
+  </select>
+
+  <insert id="insert" parameterType="com.example.club.domain.Club" useGeneratedKeys="true" keyProperty="id">
+    insert into clubs (
+      club_name, club_code, description, purpose, constitution, logo,
+      contact_person, contact_phone, contact_email, founder_id, president_id,
+      member_count, status, established_time
+    ) values (
+      #{clubName}, #{clubCode}, #{description}, #{purpose}, #{constitution}, #{logo},
+      #{contactPerson}, #{contactPhone}, #{contactEmail}, #{founderId}, #{presidentId},
+      #{memberCount}, #{status}, #{establishedTime}
+    )
+  </insert>
+
+  <update id="updateById" parameterType="com.example.club.domain.Club">
+    update clubs
+    <set>
+      <if test="clubName != null">club_name = #{clubName},</if>
+      <if test="clubCode != null">club_code = #{clubCode},</if>
+      <if test="description != null">description = #{description},</if>
+      <if test="purpose != null">purpose = #{purpose},</if>
+      <if test="constitution != null">constitution = #{constitution},</if>
+      <if test="logo != null">logo = #{logo},</if>
+      <if test="contactPerson != null">contact_person = #{contactPerson},</if>
+      <if test="contactPhone != null">contact_phone = #{contactPhone},</if>
+      <if test="contactEmail != null">contact_email = #{contactEmail},</if>
+      <if test="presidentId != null">president_id = #{presidentId},</if>
+      <if test="memberCount != null">member_count = #{memberCount},</if>
+      <if test="status != null">status = #{status},</if>
+      <if test="establishedTime != null">established_time = #{establishedTime},</if>
+    </set>
+    where id = #{id}
+  </update>
+
+  <update id="updateStatus">
+    update clubs set status = #{status} where id = #{id}
+  </update>
+
+  <update id="updateMemberCount">
+    update clubs set member_count = #{memberCount} where id = #{id}
+  </update>
+
+  <delete id="deleteById">
+    delete from clubs where id = #{id}
+  </delete>
+
+  <update id="updateFounder">
+    update clubs set founder_id = #{founderId} where id = #{id}
+  </update>
+
+  <select id="countByFounderId" resultType="long">
+    select count(1)
+    from clubs
+    where founder_id = #{founderId}
+      and (status is null or status != 3)
+  </select>
+
+  <select id="selectByFounderId" resultMap="ClubMap">
+    select
+    <include refid="BaseColumns"/>
+    from clubs
+    where founder_id = #{founderId}
+    order by created_time desc
+  </select>
+
+  <select id="selectByPresidentId" resultMap="ClubMap">
+    select
+    <include refid="BaseColumns"/>
+    from clubs
+    where president_id = #{presidentId}
+    order by created_time desc
+  </select>
+
+  <select id="selectLeaderboardByMemberCount" resultType="com.example.club.mapper.ClubMapper$ClubLeaderboardRow">
+    select
+      id as club_id,
+      club_name,
+      member_count as metric_value
+    from clubs
+    where status = 1
+    order by member_count desc, created_time desc
+    limit #{limit}
+  </select>
+
+  <select id="selectLeaderboardByActivityCount" resultType="com.example.club.mapper.ClubMapper$ClubLeaderboardRow">
+    select
+      c.id as club_id,
+      c.club_name,
+      coalesce(count(a.id), 0) as metric_value
+    from clubs c
+    left join activities a on a.club_id = c.id
+    where c.status = 1
+    group by c.id, c.club_name
+    order by metric_value desc, c.created_time desc
+    limit #{limit}
+  </select>
+
+</mapper>
+

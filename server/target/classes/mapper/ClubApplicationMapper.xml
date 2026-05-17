@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.club.mapper.ClubApplicationMapper">
+
+  <resultMap id="ClubApplicationMap" type="com.example.club.domain.ClubApplication">
+    <id column="id" property="id"/>
+    <result column="applicant_id" property="applicantId"/>
+    <result column="club_name" property="clubName"/>
+    <result column="club_code" property="clubCode"/>
+    <result column="description" property="description"/>
+    <result column="purpose" property="purpose"/>
+    <result column="constitution" property="constitution"/>
+    <result column="logo" property="logo"/>
+    <result column="attachment" property="attachment"/>
+    <result column="status" property="status"/>
+    <result column="reviewer_id" property="reviewerId"/>
+    <result column="review_time" property="reviewTime"/>
+    <result column="review_comment" property="reviewComment"/>
+    <result column="created_time" property="createdTime"/>
+    <result column="updated_time" property="updatedTime"/>
+  </resultMap>
+
+  <sql id="BaseColumns">
+    id, applicant_id, club_name, club_code, description, purpose, constitution, logo,
+    attachment, status, reviewer_id, review_time, review_comment, created_time, updated_time
+  </sql>
+
+  <select id="selectById" resultMap="ClubApplicationMap">
+    select
+    <include refid="BaseColumns"/>
+    from club_applications
+    where id = #{id}
+  </select>
+
+  <select id="countByFilters" resultType="long">
+    select count(1)
+    from club_applications
+    <where>
+      <if test="keyword != null and keyword != ''">
+        club_name like concat('%', #{keyword}, '%')
+      </if>
+      <if test="status != null">
+        and status = #{status}
+      </if>
+      <if test="applicantId != null">
+        and applicant_id = #{applicantId}
+      </if>
+    </where>
+  </select>
+
+  <select id="selectPage" resultMap="ClubApplicationMap">
+    select
+    <include refid="BaseColumns"/>
+    from club_applications
+    <where>
+      <if test="keyword != null and keyword != ''">
+        club_name like concat('%', #{keyword}, '%')
+      </if>
+      <if test="status != null">
+        and status = #{status}
+      </if>
+      <if test="applicantId != null">
+        and applicant_id = #{applicantId}
+      </if>
+    </where>
+    order by created_time desc
+    limit #{size} offset #{offset}
+  </select>
+
+  <insert id="insert" parameterType="com.example.club.domain.ClubApplication" useGeneratedKeys="true" keyProperty="id">
+    insert into club_applications (
+      applicant_id, club_name, club_code, description, purpose, constitution, logo,
+      attachment, status
+    ) values (
+      #{applicantId}, #{clubName}, #{clubCode}, #{description}, #{purpose}, #{constitution}, #{logo},
+      #{attachment}, #{status}
+    )
+  </insert>
+
+  <update id="updateById" parameterType="com.example.club.domain.ClubApplication">
+    update club_applications
+    <set>
+      <if test="clubName != null">club_name = #{clubName},</if>
+      <if test="clubCode != null">club_code = #{clubCode},</if>
+      <if test="description != null">description = #{description},</if>
+      <if test="purpose != null">purpose = #{purpose},</if>
+      <if test="constitution != null">constitution = #{constitution},</if>
+      <if test="logo != null">logo = #{logo},</if>
+      <if test="attachment != null">attachment = #{attachment},</if>
+      <if test="status != null">status = #{status},</if>
+      <if test="reviewerId != null">reviewer_id = #{reviewerId},</if>
+      <if test="reviewTime != null">review_time = #{reviewTime},</if>
+      <if test="reviewComment != null">review_comment = #{reviewComment},</if>
+    </set>
+    where id = #{id}
+  </update>
+
+  <delete id="deleteById">
+    delete from club_applications where id = #{id}
+  </delete>
+
+  <select id="countPendingByApplicant" resultType="long">
+    select count(1)
+    from club_applications
+    where applicant_id = #{applicantId}
+      and status = 0
+  </select>
+
+</mapper>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.club.mapper.NotificationMapper">
+
+  <resultMap id="NotificationMap" type="com.example.club.domain.Notification">
+    <id column="id" property="id"/>
+    <result column="user_id" property="userId"/>
+    <result column="type" property="type"/>
+    <result column="title" property="title"/>
+    <result column="content" property="content"/>
+    <result column="related_id" property="relatedId"/>
+    <result column="read_flag" property="readFlag"/>
+    <result column="created_time" property="createdTime"/>
+    <result column="read_time" property="readTime"/>
+  </resultMap>
+
+  <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+    insert into notifications (
+      user_id, type, title, content, related_id, read_flag
+    ) values (
+      #{userId}, #{type}, #{title}, #{content}, #{relatedId}, ifnull(#{readFlag}, 0)
+    )
+  </insert>
+
+  <select id="selectByUser" resultMap="NotificationMap">
+    select id, user_id, type, title, content, related_id, read_flag, created_time, read_time
+    from notifications
+    where user_id = #{userId}
+    <if test="onlyUnread != null and onlyUnread">
+      and read_flag = 0
+    </if>
+    order by created_time desc
+    limit #{size} offset #{offset}
+  </select>
+
+  <select id="countByUser" resultType="long">
+    select count(1)
+    from notifications
+    where user_id = #{userId}
+    <if test="onlyUnread != null and onlyUnread">
+      and read_flag = 0
+    </if>
+  </select>
+
+  <update id="markRead">
+    update notifications
+    set read_flag = 1,
+        read_time = #{readTime}
+    where id = #{id}
+  </update>
+
+  <update id="markAllRead">
+    update notifications
+    set read_flag = 1,
+        read_time = #{readTime}
+    where user_id = #{userId}
+      and read_flag = 0
+  </update>
+
+</mapper>
+
+

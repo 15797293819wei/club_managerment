@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="372cd7ef-8e7b-4d79-9eaf-d984c263e67e" name="更改" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHome" value="$PROJECT_DIR$/../../javaEE/apache-maven-3.9.4" />
+        <option name="userSettingsFile" value="D:\AllTest\javaEE\apache-maven-3.9.4\conf\settings.xml" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 2
+}</component>
+  <component name="ProjectId" id="38sqeEmDwEKVbT58CoNJH9I6qyD" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+    <option name="showMembers" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "master",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "D:/AllTest/Club-Management/server",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "模块",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "MavenSettings",
+    "spring.configuration.checksum": "147a2bee259984e2d207d9738f9944e8",
+    "ts.external.directory.path": "D:\\2024-2025\\IntelliJ IDEA 2023.2\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external",
+    "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "mysql"
+    ]
+  }
+}]]></component>
+  <component name="RunManager">
+    <configuration name="ClubManagementApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="club-management" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.club.ClubManagementApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="应用程序级" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="默认任务">
+      <changelist id="372cd7ef-8e7b-4d79-9eaf-d984c263e67e" name="更改" comment="" />
+      <created>1769598720869</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1769598720869</updated>
+      <workItem from="1769598721957" duration="690000" />
+      <workItem from="1769599803074" duration="438000" />
+      <workItem from="1769600586683" duration="5423000" />
+      <workItem from="1769653359471" duration="482000" />
+      <workItem from="1769653866733" duration="3289000" />
+      <workItem from="1769761510256" duration="3874000" />
+      <workItem from="1769767299298" duration="421000" />
+      <workItem from="1769768120093" duration="147000" />
+      <workItem from="1770189364499" duration="640000" />
+      <workItem from="1770888412893" duration="9000" />
+      <workItem from="1770890161541" duration="222000" />
+      <workItem from="1771056362295" duration="736000" />
+      <workItem from="1771558175408" duration="898000" />
+      <workItem from="1771676081857" duration="533000" />
+      <workItem from="1771735083452" duration="1749000" />
+      <workItem from="1772119482304" duration="2241000" />
+      <workItem from="1772870293492" duration="939000" />
+      <workItem from="1772878749922" duration="37000" />
+      <workItem from="1773069634863" duration="9000" />
+      <workItem from="1773560358932" duration="1630000" />
+      <workItem from="1773563582016" duration="126000" />
+      <workItem from="1773563715410" duration="1862000" />
+      <workItem from="1773571653489" duration="46000" />
+      <workItem from="1773646060161" duration="2636000" />
+      <workItem from="1773679165181" duration="254000" />
+      <workItem from="1773714226105" duration="2838000" />
+      <workItem from="1773733068575" duration="4244000" />
+      <workItem from="1773809418071" duration="1943000" />
+      <workItem from="1773811903403" duration="1955000" />
+      <workItem from="1773901915140" duration="1769000" />
+      <workItem from="1774146451519" duration="17000" />
+      <workItem from="1775305667322" duration="150000" />
+      <workItem from="1775962490956" duration="10000" />
+      <workItem from="1776065346603" duration="265000" />
+      <workItem from="1776088852729" duration="436000" />
+      <workItem from="1776093607693" duration="183000" />
+      <workItem from="1776093970379" duration="30000" />
+      <workItem from="1776218714584" duration="27000" />
+      <workItem from="1776221423190" duration="795000" />
+      <workItem from="1776235477598" duration="35000" />
+      <workItem from="1776257348729" duration="1371000" />
+      <workItem from="1776263949392" duration="30000" />
+      <workItem from="1776265803428" duration="29000" />
+      <workItem from="1776304981655" duration="48000" />
+      <workItem from="1776307565842" duration="1972000" />
+      <workItem from="1776312939514" duration="1000" />
+      <workItem from="1776313077950" duration="77000" />
+      <workItem from="1776651236756" duration="754000" />
+      <workItem from="1776652011359" duration="2298000" />
+      <workItem from="1776749930244" duration="3305000" />
+      <workItem from="1777463501664" duration="269000" />
+      <workItem from="1777603409068" duration="532000" />
+      <workItem from="1778318337212" duration="303000" />
+      <workItem from="1778372378131" duration="211000" />
+      <workItem from="1778388003614" duration="1254000" />
+      <workItem from="1778485377310" duration="3898000" />
+      <workItem from="1778760947102" duration="1837000" />
+      <workItem from="1778946994827" duration="11000" />
+      <workItem from="1779001032539" duration="1103000" />
+    </task>
+    <task id="LOCAL-00001" summary="最新的设计">
+      <option name="closed" value="true" />
+      <created>1779001319975</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1779001319975</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+    <MESSAGE value="最新的设计" />
+    <option name="LAST_COMMIT_MESSAGE" value="最新的设计" />
+  </component>
+</project>

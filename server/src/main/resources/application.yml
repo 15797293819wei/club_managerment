@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: club-management
+  profiles:
+    active: dev
+    # 说明：active=dev，表示加载 application-dev.yml 作为开发环境配置
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
+      # 头像/附件上传时允许的最大文件大小（默认 1MB 过小，这里提升到 5MB）
+#  web:
+#    cors:
+#      allowed-origins: "*"
+#      allowed-methods: "*"
+#      allowed-headers: "*"
+#  security:
+#    enabled: false
+
+server:
+  port: 8080
+#  address: 0.0.0.0
+
+logging:
+  level:
+    root: info
+    com.example.club: info
+  file:
+    name: logs/club-management.log
+    # 日志输出路径：logs/club-management.log
+
+

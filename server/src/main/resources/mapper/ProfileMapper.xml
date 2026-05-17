@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.club.mapper.ProfileMapper">
+
+  <select id="selectRecentActivities" resultType="com.example.club.mapper.ProfileMapper$ActivityRecordRow">
+    SELECT
+      r.id,
+      r.activity_id,
+      a.club_id,
+      c.club_name,
+      a.activity_name,
+      a.start_time,
+      a.end_time,
+      r.registration_time,
+      a.status AS activity_status,
+      r.status AS registration_status
+    FROM registrations r
+    JOIN activities a ON a.id = r.activity_id
+    LEFT JOIN clubs c ON c.id = a.club_id
+    WHERE r.user_id = #{userId}
+    ORDER BY r.registration_time DESC
+    LIMIT #{limit}
+  </select>
+
+  <select id="selectRecentAttendance" resultType="com.example.club.mapper.ProfileMapper$AttendanceRecordRow">
+    SELECT
+      at.id,
+      at.club_id,
+      c.club_name,
+      at.activity_id,
+      act.activity_name,
+      at.attendance_type,
+      at.attendance_time,
+      at.remark
+    FROM attendances at
+    JOIN members m ON m.id = at.member_id
+    LEFT JOIN clubs c ON c.id = at.club_id
+    LEFT JOIN activities act ON act.id = at.activity_id
+    WHERE m.user_id = #{userId}
+    ORDER BY at.attendance_time DESC
+    LIMIT #{limit}
+  </select>
+
+  <select id="selectRecentEvaluations" resultType="com.example.club.mapper.ProfileMapper$EvaluationRecordRow">
+    SELECT
+      e.id,
+      e.activity_id,
+      act.activity_name,
+      c.club_name,
+      e.rating,
+      e.comment,
+      e.created_time
+    FROM evaluations e
+    JOIN activities act ON act.id = e.activity_id
+    LEFT JOIN clubs c ON c.id = act.club_id
+    WHERE e.user_id = #{userId}
+    ORDER BY e.created_time DESC
+    LIMIT #{limit}
+  </select>
+
+  <select id="selectPersonalStats" resultType="com.example.club.mapper.ProfileMapper$PersonalStatsRow">
+    SELECT
+      (SELECT COUNT(DISTINCT club_id) FROM members WHERE user_id = #{userId} AND status = 1) AS joined_club_count,
+      (SELECT COUNT(1) FROM registrations WHERE user_id = #{userId} AND status = 1) AS registration_count,
+      (SELECT COUNT(1) FROM sign_ins WHERE user_id = #{userId}) AS sign_in_count,
+      (SELECT COUNT(1) FROM evaluations WHERE user_id = #{userId}) AS evaluation_count,
+      (SELECT AVG(rating) FROM evaluations WHERE user_id = #{userId}) AS average_rating,
+      (SELECT COUNT(1) FROM attendances at JOIN members m ON at.member_id = m.id WHERE m.user_id = #{userId}) AS attendance_count
+  </select>
+
+</mapper>
+

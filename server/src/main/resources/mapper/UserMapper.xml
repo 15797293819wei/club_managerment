@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.club.mapper.UserMapper">
+
+  <resultMap id="UserMap" type="com.example.club.domain.User">
+    <id column="id" property="id"/>
+    <result column="username" property="username"/>
+    <result column="password" property="password"/>
+    <result column="real_name" property="realName"/>
+    <result column="student_id" property="studentId"/>
+    <result column="email" property="email"/>
+    <result column="phone" property="phone"/>
+    <result column="gender" property="gender"/>
+    <result column="avatar" property="avatar"/>
+    <result column="status" property="status"/>
+    <result column="last_login_time" property="lastLoginTime"/>
+    <result column="password_changed_time" property="passwordChangedTime"/>
+    <result column="login_failure_count" property="loginFailureCount"/>
+    <result column="account_locked_until" property="accountLockedUntil"/>
+    <result column="password_reset_token" property="passwordResetToken"/>
+    <result column="password_reset_token_expiry" property="passwordResetTokenExpiry"/>
+    <result column="created_time" property="createdTime"/>
+    <result column="updated_time" property="updatedTime"/>
+  </resultMap>
+
+  <sql id="BaseColumns">
+    id, username, password, real_name, student_id, email, phone, gender, avatar, status,
+    last_login_time, password_changed_time, login_failure_count, account_locked_until,
+    password_reset_token, password_reset_token_expiry, created_time, updated_time
+  </sql>
+
+  <select id="selectById" resultMap="UserMap">
+    select
+    <include refid="BaseColumns"/>
+    from users
+    where id = #{id}
+  </select>
+
+  <select id="countAll" resultType="long">
+    select count(1) from users
+  </select>
+
+  <select id="selectPage" resultMap="UserMap">
+    select
+    <include refid="BaseColumns"/>
+    from users
+    <where>
+      <if test="keyword != null and keyword != ''">
+        (username like concat('%', #{keyword}, '%')
+        or real_name like concat('%', #{keyword}, '%')
+        or email like concat('%', #{keyword}, '%'))
+      </if>
+      <if test="username != null and username != ''">
+        and username like concat('%', #{username}, '%')
+      </if>
+      <if test="studentId != null and studentId != ''">
+        and student_id like concat('%', #{studentId}, '%')
+      </if>
+      <if test="roleCode != null and roleCode != ''">
+        and exists (
+          select 1 from user_roles ur
+          join roles r on r.id = ur.role_id
+          where ur.user_id = users.id
+          and upper(r.role_code) = upper(#{roleCode})
+        )
+      </if>
+      <if test="status != null">
+        and status = #{status}
+      </if>
+    </where>
+    order by created_time desc
+    limit #{size} offset #{offset}
+  </select>
+
+  <select id="countByFilters" resultType="long">
+    select count(1)
+    from users
+    <where>
+      <if test="keyword != null and keyword != ''">
+        (username like concat('%', #{keyword}, '%')
+        or real_name like concat('%', #{keyword}, '%')
+        or email like concat('%', #{keyword}, '%'))
+      </if>
+      <if test="username != null and username != ''">
+        and username like concat('%', #{username}, '%')
+      </if>
+      <if test="studentId != null and studentId != ''">
+        and student_id like concat('%', #{studentId}, '%')
+      </if>
+      <if test="roleCode != null and roleCode != ''">
+        and exists (
+          select 1 from user_roles ur
+          join roles r on r.id = ur.role_id
+          where ur.user_id = users.id
+          and upper(r.role_code) = upper(#{roleCode})
+        )
+      </if>
+      <if test="status != null">
+        and status = #{status}
+      </if>
+    </where>
+  </select>
+
+  <insert id="insert" parameterType="com.example.club.domain.User" useGeneratedKeys="true" keyProperty="id">
+    insert into users (
+      username, password, real_name, student_id, email, phone, gender, avatar, status, last_login_time, password_changed_time
+    ) values (
+      #{username}, #{password}, #{realName}, #{studentId}, #{email}, #{phone}, #{gender}, #{avatar}, #{status}, #{lastLoginTime}, #{passwordChangedTime}
+    )
+  </insert>
+
+  <update id="updateById" parameterType="com.example.club.domain.User">
+    update users
+    <set>
+      <if test="username != null">username = #{username},</if>
+      <if test="password != null">password = #{password},</if>
+      <if test="realName != null">real_name = #{realName},</if>
+      <if test="studentId != null">student_id = #{studentId},</if>
+      <if test="email != null">email = #{email},</if>
+      <if test="phone != null">phone = #{phone},</if>
+      <if test="gender != null">gender = #{gender},</if>
+      <if test="avatar != null">avatar = #{avatar},</if>
+      <if test="status != null">status = #{status},</if>
+      <if test="lastLoginTime != null">last_login_time = #{lastLoginTime},</if>
+      <if test="passwordChangedTime != null">password_changed_time = #{passwordChangedTime},</if>
+      <if test="loginFailureCount != null">login_failure_count = #{loginFailureCount},</if>
+      <if test="accountLockedUntil != null">account_locked_until = #{accountLockedUntil},</if>
+      <if test="passwordResetToken != null">password_reset_token = #{passwordResetToken},</if>
+      <if test="passwordResetTokenExpiry != null">password_reset_token_expiry = #{passwordResetTokenExpiry},</if>
+    </set>
+    where id = #{id}
+  </update>
+
+  <delete id="deleteById">
+    delete from users where id = #{id}
+  </delete>
+
+  <update id="updateStatus">
+    update users set status = #{status} where id = #{id}
+  </update>
+
+  <update id="batchUpdateStatus">
+    update users
+    set status = #{status}
+    where id in
+    <foreach collection="ids" item="id" open="(" separator="," close=")">
+      #{id}
+    </foreach>
+  </update>
+
+  <update id="updateLastLoginTime">
+    update users set last_login_time = #{time} where id = #{id}
+  </update>
+
+  <update id="updatePasswordChangedTime">
+    update users set password_changed_time = #{time} where id = #{id}
+  </update>
+
+  <update id="incrementLoginFailureCount">
+    update users set login_failure_count = login_failure_count + 1 where id = #{id}
+  </update>
+
+  <update id="resetLoginFailureCount">
+    update users set login_failure_count = 0, account_locked_until = null where id = #{id}
+  </update>
+
+  <update id="lockAccount">
+    update users set account_locked_until = #{lockedUntil} where id = #{id}
+  </update>
+
+  <update id="setPasswordResetToken">
+    update users set password_reset_token = #{token}, password_reset_token_expiry = #{expiry} where id = #{id}
+  </update>
+
+  <update id="clearPasswordResetToken">
+    update users set password_reset_token = null, password_reset_token_expiry = null where id = #{id}
+  </update>
+
+  <select id="selectByPasswordResetToken" resultMap="UserMap">
+    select
+    <include refid="BaseColumns"/>
+    from users
+    where password_reset_token = #{token}
+    and password_reset_token_expiry > now()
+  </select>
+
+  <select id="selectByEmail" resultMap="UserMap">
+    select
+    <include refid="BaseColumns"/>
+    from users
+    where email = #{email}
+  </select>
+
+  <select id="selectByPhone" resultMap="UserMap">
+    select
+    <include refid="BaseColumns"/>
+    from users
+    where phone = #{phone}
+  </select>
+
+  <select id="existsByUsername" resultType="boolean">
+    select exists(select 1 from users where username = #{username})
+  </select>
+
+  <select id="selectByStudentId" resultMap="UserMap">
+    select
+    <include refid="BaseColumns"/>
+    from users
+    where student_id = #{studentId}
+  </select>
+
+  <select id="selectByUsername" resultMap="UserMap">
+    select
+    <include refid="BaseColumns"/>
+    from users
+    where username = #{username}
+  </select>
+
+  <select id="selectByIds" resultMap="UserMap">
+    select
+    <include refid="BaseColumns"/>
+    from users
+    where id in
+    <foreach collection="ids" item="id" open="(" separator="," close=")">
+      #{id}
+    </foreach>
+  </select>
+
+  <select id="selectRoleCodesByUserId" resultType="string">
+    select r.role_code
+    from user_roles ur
+    join roles r on r.id = ur.role_id
+    where ur.user_id = #{userId}
+  </select>
+
+  <select id="selectUsernamesByIds" resultType="map">
+    select id, username
+    from users
+    where id in
+    <foreach collection="ids" item="id" open="(" separator="," close=")">
+      #{id}
+    </foreach>
+  </select>
+
+  <select id="selectActiveUserIds" resultType="long">
+    select id
+    from users
+    where status = 1
+  </select>
+
+</mapper>
+
+

@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.club.mapper.StatisticsMapper">
+
+  <resultMap id="ClubActivitySummaryMap" type="com.example.club.dto.statistics.ClubActivitySummaryDTO">
+    <result column="club_id" property="clubId"/>
+    <result column="club_name" property="clubName"/>
+    <result column="activity_count" property="activityCount"/>
+    <result column="registration_count" property="registrationCount"/>
+    <result column="sign_in_count" property="signInCount"/>
+    <result column="total_participants" property="totalParticipants"/>
+  </resultMap>
+
+  <resultMap id="ClubActivityTrendMap" type="com.example.club.dto.statistics.ClubActivityTrendPointDTO">
+    <result column="period" property="period"/>
+    <result column="activity_count" property="activityCount"/>
+    <result column="registration_count" property="registrationCount"/>
+    <result column="sign_in_count" property="signInCount"/>
+  </resultMap>
+
+  <resultMap id="MemberParticipationMap" type="com.example.club.dto.statistics.MemberParticipationDTO">
+    <result column="user_id" property="userId"/>
+    <result column="username" property="username"/>
+    <result column="real_name" property="realName"/>
+    <result column="registration_count" property="registrationCount"/>
+    <result column="sign_in_count" property="signInCount"/>
+    <result column="participation_rate" property="participationRate"/>
+  </resultMap>
+
+  <!-- 社团活跃度汇总 -->
+  <select id="selectClubActivitySummary" resultMap="ClubActivitySummaryMap">
+    SELECT
+      t.club_id,
+      c.club_name,
+      COUNT(1) AS activity_count,
+      COALESCE(SUM(t.registration_count), 0) AS registration_count,
+      COALESCE(SUM(t.sign_in_count), 0) AS sign_in_count,
+      COALESCE(SUM(t.current_participants), 0) AS total_participants
+    FROM (
+      SELECT
+        a.id,
+        a.club_id,
+        COALESCE(a.current_participants, 0) AS current_participants,
+        (
+          SELECT COUNT(1)
+          FROM registrations r
+          WHERE r.activity_id = a.id
+            AND r.status = 1
+            <if test="startTime != null">
+              AND r.registration_time &gt;= #{startTime}
+            </if>
+            <if test="endTime != null">
+              AND r.registration_time &lt;= #{endTime}
+            </if>
+        ) AS registration_count,
+        (
+          SELECT COUNT(1)
+          FROM sign_ins s
+          WHERE s.activity_id = a.id
+            <if test="startTime != null">
+              AND s.sign_in_time &gt;= #{startTime}
+            </if>
+            <if test="endTime != null">
+              AND s.sign_in_time &lt;= #{endTime}
+            </if>
+        ) AS sign_in_count
+      FROM activities a
+      WHERE 1 = 1
+        <if test="clubId != null">
+          AND a.club_id = #{clubId}
+        </if>
+        <if test="startTime != null">
+          AND a.start_time &gt;= #{startTime}
+        </if>
+        <if test="endTime != null">
+          AND a.start_time &lt;= #{endTime}
+        </if>
+    ) t
+    JOIN clubs c ON c.id = t.club_id
+    GROUP BY t.club_id, c.club_name
+    ORDER BY activity_count DESC, registration_count DESC
+  </select>
+
+  <!-- 社团活跃度趋势 -->
+  <select id="selectClubActivityTrend" resultMap="ClubActivityTrendMap">
+    SELECT
+      period,
+      COUNT(1) AS activity_count,
+      COALESCE(SUM(registration_count), 0) AS registration_count,
+      COALESCE(SUM(sign_in_count), 0) AS sign_in_count
+    FROM (
+      SELECT
+        CASE
+          WHEN #{granularity} = 'MONTH' THEN DATE_FORMAT(a.start_time, '%Y-%m')
+          WHEN #{granularity} = 'WEEK' THEN DATE_FORMAT(a.start_time, '%x-W%v')
+          ELSE DATE_FORMAT(a.start_time, '%Y-%m-%d')
+        END AS period,
+        (
+          SELECT COUNT(1)
+          FROM registrations r
+          WHERE r.activity_id = a.id
+            AND r.status = 1
+            <if test="startTime != null">
+              AND r.registration_time &gt;= #{startTime}
+            </if>
+            <if test="endTime != null">
+              AND r.registration_time &lt;= #{endTime}
+            </if>
+        ) AS registration_count,
+        (
+          SELECT COUNT(1)
+          FROM sign_ins s
+          WHERE s.activity_id = a.id
+            <if test="startTime != null">
+              AND s.sign_in_time &gt;= #{startTime}
+            </if>
+            <if test="endTime != null">
+              AND s.sign_in_time &lt;= #{endTime}
+            </if>
+        ) AS sign_in_count
+      FROM activities a
+      WHERE 1 = 1
+        <if test="clubId != null">
+          AND a.club_id = #{clubId}
+        </if>
+        <if test="startTime != null">
+          AND a.start_time &gt;= #{startTime}
+        </if>
+        <if test="endTime != null">
+          AND a.start_time &lt;= #{endTime}
+        </if>
+    ) t
+    GROUP BY period
+    ORDER BY period ASC
+  </select>
+
+  <!-- 成员参与度排行榜 -->
+  <select id="selectMemberParticipationRanking" resultMap="MemberParticipationMap">
+    SELECT
+      u.id AS user_id,
+      u.username,
+      u.real_name,
+      COUNT(DISTINCT r.activity_id) AS registration_count,
+      COALESCE(SUM(s.sign_in_count), 0) AS sign_in_count,
+      CASE
+        WHEN COUNT(DISTINCT r.activity_id) = 0 THEN 0
+        ELSE ROUND(COALESCE(SUM(s.sign_in_count), 0) / COUNT(DISTINCT r.activity_id), 4)
+      END AS participation_rate
+    FROM registrations r
+    JOIN users u ON u.id = r.user_id
+    JOIN activities a ON a.id = r.activity_id
+    LEFT JOIN (
+      SELECT activity_id, user_id, COUNT(1) AS sign_in_count
+      FROM sign_ins
+      WHERE 1 = 1
+        <if test="startTime != null">
+          AND sign_in_time &gt;= #{startTime}
+        </if>
+        <if test="endTime != null">
+          AND sign_in_time &lt;= #{endTime}
+        </if>
+      GROUP BY activity_id, user_id
+    ) s ON s.activity_id = r.activity_id AND s.user_id = r.user_id
+    WHERE r.status = 1
+      <if test="clubId != null">
+        AND a.club_id = #{clubId}
+      </if>
+      <if test="startTime != null">
+        AND r.registration_time &gt;= #{startTime}
+      </if>
+      <if test="endTime != null">
+        AND r.registration_time &lt;= #{endTime}
+      </if>
+    GROUP BY u.id, u.username, u.real_name
+    ORDER BY registration_count DESC, sign_in_count DESC
+    <if test="limit != null">
+      LIMIT #{limit}
+    </if>
+  </select>
+
+  <!-- 成员参与度详情 -->
+  <select id="selectMemberParticipationDetail" resultMap="MemberParticipationMap">
+    SELECT
+      u.id AS user_id,
+      u.username,
+      u.real_name,
+      COALESCE(COUNT(DISTINCT r.activity_id), 0) AS registration_count,
+      COALESCE(SUM(s.sign_in_count), 0) AS sign_in_count,
+      CASE
+        WHEN COALESCE(COUNT(DISTINCT r.activity_id), 0) = 0 THEN 0
+        ELSE ROUND(COALESCE(SUM(s.sign_in_count), 0) / COUNT(DISTINCT r.activity_id), 4)
+      END AS participation_rate
+    FROM users u
+    LEFT JOIN registrations r ON r.user_id = u.id AND r.status = 1
+    LEFT JOIN activities a ON a.id = r.activity_id
+    LEFT JOIN (
+      SELECT activity_id, user_id, COUNT(1) AS sign_in_count
+      FROM sign_ins
+      WHERE 1 = 1
+        <if test="startTime != null">
+          AND sign_in_time &gt;= #{startTime}
+        </if>
+        <if test="endTime != null">
+          AND sign_in_time &lt;= #{endTime}
+        </if>
+      GROUP BY activity_id, user_id
+    ) s ON s.activity_id = r.activity_id AND s.user_id = u.id
+    WHERE u.id = #{userId}
+      <if test="clubId != null">
+        AND (a.club_id = #{clubId} OR a.club_id IS NULL)
+      </if>
+      <if test="startTime != null">
+        AND (r.registration_time IS NULL OR r.registration_time &gt;= #{startTime})
+      </if>
+      <if test="endTime != null">
+        AND (r.registration_time IS NULL OR r.registration_time &lt;= #{endTime})
+      </if>
+    GROUP BY u.id, u.username, u.real_name
+  </select>
+
+</mapper>

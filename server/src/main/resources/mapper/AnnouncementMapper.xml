@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.club.mapper.AnnouncementMapper">
+
+  <resultMap id="AnnouncementMap" type="com.example.club.domain.Announcement">
+    <id column="id" property="id"/>
+    <result column="title" property="title"/>
+    <result column="content" property="content"/>
+    <result column="scope_type" property="scopeType"/>
+    <result column="club_id" property="clubId"/>
+    <result column="club_name" property="clubName"/>
+    <result column="publisher_id" property="publisherId"/>
+    <result column="publisher_name" property="publisherName"/>
+    <result column="publisher_role" property="publisherRole"/>
+    <result column="created_time" property="createdTime"/>
+    <result column="updated_time" property="updatedTime"/>
+  </resultMap>
+
+  <sql id="BaseColumns">
+    id, title, content, scope_type, club_id, club_name,
+    publisher_id, publisher_name, publisher_role,
+    created_time, updated_time
+  </sql>
+
+  <insert id="insert" parameterType="com.example.club.domain.Announcement" useGeneratedKeys="true" keyProperty="id">
+    insert into announcements (
+      title, content, scope_type, club_id, club_name,
+      publisher_id, publisher_name, publisher_role
+    ) values (
+      #{title}, #{content}, #{scopeType}, #{clubId}, #{clubName},
+      #{publisherId}, #{publisherName}, #{publisherRole}
+    )
+  </insert>
+
+  <select id="selectById" resultMap="AnnouncementMap">
+    select
+    <include refid="BaseColumns"/>
+    from announcements
+    where id = #{id}
+  </select>
+
+  <select id="countForAudience" resultType="long">
+    select count(1)
+    from announcements
+    where scope_type = 'GLOBAL'
+    <if test="clubIds != null and clubIds.size > 0">
+      or (scope_type = 'CLUB' and club_id in
+      <foreach collection="clubIds" item="clubId" open="(" separator="," close=")">
+        #{clubId}
+      </foreach>
+      )
+    </if>
+  </select>
+
+  <select id="selectForAudience" resultMap="AnnouncementMap">
+    select
+    <include refid="BaseColumns"/>
+    from announcements
+    where scope_type = 'GLOBAL'
+    <if test="clubIds != null and clubIds.size > 0">
+      or (scope_type = 'CLUB' and club_id in
+      <foreach collection="clubIds" item="clubId" open="(" separator="," close=")">
+        #{clubId}
+      </foreach>
+      )
+    </if>
+    order by created_time desc
+    limit #{size} offset #{offset}
+  </select>
+
+  <select id="countForManage" resultType="long">
+    select count(1)
+    from announcements
+    <where>
+      <if test="systemAdmin">
+        <if test="scopeType != null and scopeType != ''">
+          and scope_type = #{scopeType}
+        </if>
+        <if test="clubId != null">
+          and club_id = #{clubId}
+        </if>
+      </if>
+      <if test="!systemAdmin">
+        and publisher_id = #{publisherId}
+        <if test="scopeType != null and scopeType != ''">
+          and scope_type = #{scopeType}
+        </if>
+        <if test="clubId != null">
+          and club_id = #{clubId}
+        </if>
+      </if>
+    </where>
+  </select>
+
+  <select id="selectForManage" resultMap="AnnouncementMap">
+    select
+    <include refid="BaseColumns"/>
+    from announcements
+    <where>
+      <if test="systemAdmin">
+        <if test="scopeType != null and scopeType != ''">
+          and scope_type = #{scopeType}
+        </if>
+        <if test="clubId != null">
+          and club_id = #{clubId}
+        </if>
+      </if>
+      <if test="!systemAdmin">
+        and publisher_id = #{publisherId}
+        <if test="scopeType != null and scopeType != ''">
+          and scope_type = #{scopeType}
+        </if>
+        <if test="clubId != null">
+          and club_id = #{clubId}
+        </if>
+      </if>
+    </where>
+    order by created_time desc
+    limit #{size} offset #{offset}
+  </select>
+
+</mapper>
+

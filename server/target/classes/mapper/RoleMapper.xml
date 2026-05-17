@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.club.mapper.RoleMapper">
+
+  <resultMap id="RoleMap" type="com.example.club.domain.Role">
+    <id column="id" property="id"/>
+    <result column="role_code" property="roleCode"/>
+    <result column="role_name" property="roleName"/>
+    <result column="description" property="description"/>
+    <result column="status" property="status"/>
+    <result column="created_time" property="createdTime"/>
+    <result column="updated_time" property="updatedTime"/>
+  </resultMap>
+
+  <sql id="BaseColumns">
+    id, role_code, role_name, description, status, created_time, updated_time
+  </sql>
+
+  <select id="selectById" resultMap="RoleMap">
+    select
+    <include refid="BaseColumns"/>
+    from roles
+    where id = #{id}
+  </select>
+
+  <select id="selectByCode" resultMap="RoleMap">
+    select
+    <include refid="BaseColumns"/>
+    from roles
+    where role_code = #{roleCode}
+  </select>
+
+  <select id="selectPage" resultMap="RoleMap">
+    select
+    <include refid="BaseColumns"/>
+    from roles
+    <where>
+      <if test="keyword != null and keyword != ''">
+        (role_code like concat('%', #{keyword}, '%')
+        or role_name like concat('%', #{keyword}, '%'))
+      </if>
+      <if test="status != null">
+        and status = #{status}
+      </if>
+    </where>
+    order by created_time desc
+    limit #{size} offset #{offset}
+  </select>
+
+  <select id="countByFilters" resultType="long">
+    select count(1)
+    from roles
+    <where>
+      <if test="keyword != null and keyword != ''">
+        (role_code like concat('%', #{keyword}, '%')
+        or role_name like concat('%', #{keyword}, '%'))
+      </if>
+      <if test="status != null">
+        and status = #{status}
+      </if>
+    </where>
+  </select>
+
+  <insert id="insert" parameterType="com.example.club.domain.Role" useGeneratedKeys="true" keyProperty="id">
+    insert into roles (role_code, role_name, description, status)
+    values (#{roleCode}, #{roleName}, #{description}, #{status})
+  </insert>
+
+  <update id="updateById" parameterType="com.example.club.domain.Role">
+    update roles
+    <set>
+      <if test="roleCode != null">role_code = #{roleCode},</if>
+      <if test="roleName != null">role_name = #{roleName},</if>
+      <if test="description != null">description = #{description},</if>
+      <if test="status != null">status = #{status},</if>
+    </set>
+    where id = #{id}
+  </update>
+
+  <delete id="deleteById">
+    delete from roles where id = #{id}
+  </delete>
+
+  <select id="selectByIds" resultMap="RoleMap">
+    select
+    <include refid="BaseColumns"/>
+    from roles
+    where id in
+    <foreach collection="ids" item="id" open="(" separator="," close=")">
+      #{id}
+    </foreach>
+  </select>
+
+  <select id="selectAllActive" resultMap="RoleMap">
+    select
+    <include refid="BaseColumns"/>
+    from roles
+    where status = 1
+    order by created_time desc
+  </select>
+
+</mapper>
+
+

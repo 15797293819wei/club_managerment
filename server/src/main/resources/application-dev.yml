@@ -1,0 +1,44 @@
+spring:
+  datasource:
+    # 数据源连接信息（按需修改主机/端口/库名/账号密码）
+    url: jdbc:mysql://localhost:3306/club_management?useSSL=false&serverTimezone=Asia/Shanghai&characterEncoding=utf8&allowPublicKeyRetrieval=true
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      # 连接池配置（开发环境取较小值）
+      maximum-pool-size: 10
+      minimum-idle: 2
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.example.club.domain
+  configuration:
+    # 开启下划线转驼峰（DB 字段 -> Java 字段）
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+    default-fetch-size: 100
+    default-statement-timeout: 30
+
+app:
+  jwt:
+    # Base64 编码后的 256-bit 密钥（示例值，请在本地替换为你的密钥）
+    # 生成方式（Windows PowerShell 示例）:
+    # [Convert]::ToBase64String((1..32 | ForEach-Object { Get-Random -Minimum 0 -Maximum 256 }))
+    secret: dGVzdC10ZXN0LXNlY3JldC10ZXN0LXNlY3JldC10ZXN0LXNlY3JldC0yNTZiaXRz
+    expireMinutes: 120
+  upload:
+    # 文件上传目录
+    dir: uploads
+    # 文件访问URL前缀
+    url-prefix: /api/files
+  activity:
+    # 活动数据保留策略配置（目前代码未启用自动清理，仅预留配置）
+    retention:
+      enabled: false
+      retentionDays: 365
+      cleanupMode: DELETE
+

@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.club.mapper.MemberMapper">
+
+  <resultMap id="MemberMap" type="com.example.club.domain.Member">
+    <id column="id" property="id"/>
+    <result column="club_id" property="clubId"/>
+    <result column="user_id" property="userId"/>
+    <result column="role" property="role"/>
+    <result column="join_time" property="joinTime"/>
+    <result column="status" property="status"/>
+    <result column="created_time" property="createdTime"/>
+    <result column="updated_time" property="updatedTime"/>
+  </resultMap>
+
+  <sql id="BaseColumns">
+    id, club_id, user_id, role, join_time, status, created_time, updated_time
+  </sql>
+
+  <select id="selectById" resultMap="MemberMap">
+    select
+    <include refid="BaseColumns"/>
+    from members
+    where id = #{id}
+  </select>
+
+  <select id="selectByClubIdAndUserId" resultMap="MemberMap">
+    select
+    <include refid="BaseColumns"/>
+    from members
+    where club_id = #{clubId} and user_id = #{userId}
+  </select>
+
+  <select id="countByFilters" resultType="long">
+    select count(1)
+    from members
+    <where>
+      <if test="clubId != null">
+        and club_id = #{clubId}
+      </if>
+      <if test="userId != null">
+        and user_id = #{userId}
+      </if>
+      <if test="role != null and role != ''">
+        and role = #{role}
+      </if>
+      <if test="status != null">
+        and status = #{status}
+      </if>
+    </where>
+  </select>
+
+  <select id="selectPage" resultMap="MemberMap">
+    select
+    <include refid="BaseColumns"/>
+    from members
+    <where>
+      <if test="clubId != null">
+        and club_id = #{clubId}
+      </if>
+      <if test="userId != null">
+        and user_id = #{userId}
+      </if>
+      <if test="role != null and role != ''">
+        and role = #{role}
+      </if>
+      <if test="status != null">
+        and status = #{status}
+      </if>
+    </where>
+    order by created_time desc
+    limit #{size} offset #{offset}
+  </select>
+
+  <insert id="insert" parameterType="com.example.club.domain.Member" useGeneratedKeys="true" keyProperty="id">
+    insert into members (
+      club_id, user_id, role, join_time, status
+    ) values (
+      #{clubId}, #{userId}, #{role}, #{joinTime}, #{status}
+    )
+  </insert>
+
+  <update id="updateById" parameterType="com.example.club.domain.Member">
+    update members
+    <set>
+      <if test="role != null">role = #{role},</if>
+      <if test="status != null">status = #{status},</if>
+    </set>
+    where id = #{id}
+  </update>
+
+  <update id="updateStatus">
+    update members set status = #{status} where id = #{id}
+  </update>
+
+  <update id="updateRole">
+    update members set role = #{role} where id = #{id}
+  </update>
+
+  <delete id="deleteById">
+    delete from members where id = #{id}
+  </delete>
+
+  <update id="updateStatusByClubId">
+    update members
+    set status = #{status}
+    where club_id = #{clubId}
+  </update>
+
+  <select id="selectByIds" resultMap="MemberMap">
+    select
+    <include refid="BaseColumns"/>
+    from members
+    where id in
+    <foreach collection="ids" item="id" open="(" separator="," close=")">
+      #{id}
+    </foreach>
+  </select>
+
+  <select id="selectList" resultMap="MemberMap">
+    select
+    <include refid="BaseColumns"/>
+    from members
+    <where>
+      <if test="clubId != null">
+        and club_id = #{clubId}
+      </if>
+      <if test="userId != null">
+        and user_id = #{userId}
+      </if>
+      <if test="role != null and role != ''">
+        and role = #{role}
+      </if>
+      <if test="status != null">
+        and status = #{status}
+      </if>
+    </where>
+    order by join_time desc
+  </select>
+
+  <select id="countRoleDistribution" resultType="map">
+    select role as role, count(1) as cnt
+    from members
+    where club_id = #{clubId} and status = 1
+    group by role
+  </select>
+
+  <select id="countNewMembers" resultType="long">
+    select count(1)
+    from members
+    where club_id = #{clubId}
+      and status = 1
+      and join_time >= #{since}
+  </select>
+
+  <select id="countActiveMembers" resultType="long">
+    select count(distinct m.id)
+    from members m
+    join registrations r on r.user_id = m.user_id and r.status = 1
+    join activities a on a.id = r.activity_id
+    where m.club_id = #{clubId}
+      and m.status = 1
+      and a.club_id = #{clubId}
+      and r.registration_time >= #{since}
+  </select>
+
+  <update id="updateRoleBatch">
+    update members
+    set role = #{role}
+    where id in
+    <foreach collection="ids" item="id" open="(" separator="," close=")">
+      #{id}
+    </foreach>
+  </update>
+
+  <update id="updateStatusBatch">
+    update members
+    set status = #{status}
+    where id in
+    <foreach collection="ids" item="id" open="(" separator="," close=")">
+      #{id}
+    </foreach>
+  </update>
+
+  <delete id="deleteByIds">
+    delete from members
+    where id in
+    <foreach collection="ids" item="id" open="(" separator="," close=")">
+      #{id}
+    </foreach>
+  </delete>
+
+  <select id="selectActiveClubIdsByUserId" resultType="long">
+    select distinct club_id
+    from members
+    where user_id = #{userId}
+      and status = 1
+  </select>
+
+  <select id="selectActiveUserIdsByClubId" resultType="long">
+    select distinct user_id
+    from members
+    where club_id = #{clubId}
+      and status = 1
+  </select>
+
+</mapper>
+

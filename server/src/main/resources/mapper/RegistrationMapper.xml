@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.club.mapper.RegistrationMapper">
+
+  <resultMap id="RegistrationMap" type="com.example.club.domain.Registration">
+    <id column="id" property="id"/>
+    <result column="activity_id" property="activityId"/>
+    <result column="user_id" property="userId"/>
+    <result column="registration_time" property="registrationTime"/>
+    <result column="status" property="status"/>
+    <result column="created_time" property="createdTime"/>
+    <result column="updated_time" property="updatedTime"/>
+  </resultMap>
+
+  <sql id="BaseColumns">
+    id, activity_id, user_id, registration_time, status, created_time, updated_time
+  </sql>
+
+  <select id="selectById" resultMap="RegistrationMap">
+    select
+    <include refid="BaseColumns"/>
+    from registrations
+    where id = #{id}
+  </select>
+
+  <select id="selectByActivityIdAndUserId" resultMap="RegistrationMap">
+    select
+    <include refid="BaseColumns"/>
+    from registrations
+    where activity_id = #{activityId} and user_id = #{userId}
+  </select>
+
+  <select id="countByFilters" resultType="long">
+    select count(1)
+    from registrations
+    <where>
+      <if test="activityId != null">
+        and activity_id = #{activityId}
+      </if>
+      <if test="userId != null">
+        and user_id = #{userId}
+      </if>
+      <if test="status != null">
+        and status = #{status}
+      </if>
+    </where>
+  </select>
+
+  <select id="selectPage" resultMap="RegistrationMap">
+    select
+    <include refid="BaseColumns"/>
+    from registrations
+    <where>
+      <if test="activityId != null">
+        and activity_id = #{activityId}
+      </if>
+      <if test="userId != null">
+        and user_id = #{userId}
+      </if>
+      <if test="status != null">
+        and status = #{status}
+      </if>
+    </where>
+    order by registration_time desc
+    limit #{offset}, #{size}
+  </select>
+
+  <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+    insert into registrations (
+      activity_id, user_id, registration_time, status
+    ) values (
+      #{activityId}, #{userId}, #{registrationTime}, #{status}
+    )
+  </insert>
+
+  <update id="updateById">
+    update registrations
+    <set>
+      <if test="status != null">status = #{status},</if>
+    </set>
+    where id = #{id}
+  </update>
+
+  <update id="updateStatus">
+    update registrations
+    set status = #{status}
+    where id = #{id}
+  </update>
+
+  <delete id="deleteById">
+    delete from registrations
+    where id = #{id}
+  </delete>
+
+</mapper>
+

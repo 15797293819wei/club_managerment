@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.club.mapper.SignInMapper">
+
+  <resultMap id="SignInMap" type="com.example.club.domain.SignIn">
+    <id column="id" property="id"/>
+    <result column="activity_id" property="activityId"/>
+    <result column="user_id" property="userId"/>
+    <result column="sign_in_time" property="signInTime"/>
+    <result column="sign_in_type" property="signInType"/>
+    <result column="location" property="location"/>
+    <result column="remark" property="remark"/>
+    <result column="created_time" property="createdTime"/>
+  </resultMap>
+
+  <sql id="BaseColumns">
+    id, activity_id, user_id, sign_in_time, sign_in_type, location, remark, created_time
+  </sql>
+
+  <select id="selectById" resultMap="SignInMap">
+    select
+    <include refid="BaseColumns"/>
+    from sign_ins
+    where id = #{id}
+  </select>
+
+  <select id="selectByActivityIdAndUserId" resultMap="SignInMap">
+    select
+    <include refid="BaseColumns"/>
+    from sign_ins
+    where activity_id = #{activityId} and user_id = #{userId}
+  </select>
+
+  <select id="countByFilters" resultType="long">
+    select count(1)
+    from sign_ins
+    <where>
+      <if test="activityId != null">
+        and activity_id = #{activityId}
+      </if>
+      <if test="userId != null">
+        and user_id = #{userId}
+      </if>
+    </where>
+  </select>
+
+  <select id="selectPage" resultMap="SignInMap">
+    select
+    <include refid="BaseColumns"/>
+    from sign_ins
+    <where>
+      <if test="activityId != null">
+        and activity_id = #{activityId}
+      </if>
+      <if test="userId != null">
+        and user_id = #{userId}
+      </if>
+    </where>
+    order by sign_in_time desc
+    limit #{offset}, #{size}
+  </select>
+
+  <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+    insert into sign_ins (
+      activity_id, user_id, sign_in_time, sign_in_type, location, remark
+    ) values (
+      #{activityId}, #{userId}, #{signInTime}, #{signInType}, #{location}, #{remark}
+    )
+  </insert>
+
+  <delete id="deleteById">
+    delete from sign_ins
+    where id = #{id}
+  </delete>
+
+</mapper>
+

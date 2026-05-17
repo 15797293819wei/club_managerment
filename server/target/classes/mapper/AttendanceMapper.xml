@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.club.mapper.AttendanceMapper">
+
+  <resultMap id="AttendanceMap" type="com.example.club.domain.Attendance">
+    <id column="id" property="id"/>
+    <result column="club_id" property="clubId"/>
+    <result column="activity_id" property="activityId"/>
+    <result column="member_id" property="memberId"/>
+    <result column="attendance_type" property="attendanceType"/>
+    <result column="attendance_time" property="attendanceTime"/>
+    <result column="remark" property="remark"/>
+    <result column="exception_flag" property="exceptionFlag"/>
+    <result column="exception_status" property="exceptionStatus"/>
+    <result column="exception_reason" property="exceptionReason"/>
+    <result column="handled_by" property="handledBy"/>
+    <result column="handled_time" property="handledTime"/>
+    <result column="created_time" property="createdTime"/>
+  </resultMap>
+
+  <sql id="BaseColumns">
+    id, club_id, activity_id, member_id, attendance_type, attendance_time, remark,
+    exception_flag, exception_status, exception_reason, handled_by, handled_time, created_time
+  </sql>
+
+  <select id="selectById" resultMap="AttendanceMap">
+    select
+    <include refid="BaseColumns"/>
+    from attendances
+    where id = #{id}
+  </select>
+
+  <select id="countByFilters" resultType="long">
+    select count(1)
+    from attendances
+    <where>
+      <if test="clubId != null">
+        and club_id = #{clubId}
+      </if>
+      <if test="activityId != null">
+        and activity_id = #{activityId}
+      </if>
+      <if test="memberId != null">
+        and member_id = #{memberId}
+      </if>
+      <if test="startTime != null">
+        and attendance_time &gt;= #{startTime}
+      </if>
+      <if test="endTime != null">
+        and attendance_time &lt;= #{endTime}
+      </if>
+    </where>
+  </select>
+
+  <select id="selectPage" resultMap="AttendanceMap">
+    select
+    <include refid="BaseColumns"/>
+    from attendances
+    <where>
+      <if test="clubId != null">
+        and club_id = #{clubId}
+      </if>
+      <if test="activityId != null">
+        and activity_id = #{activityId}
+      </if>
+      <if test="memberId != null">
+        and member_id = #{memberId}
+      </if>
+      <if test="startTime != null">
+        and attendance_time &gt;= #{startTime}
+      </if>
+      <if test="endTime != null">
+        and attendance_time &lt;= #{endTime}
+      </if>
+    </where>
+    order by attendance_time desc
+    limit #{size} offset #{offset}
+  </select>
+
+  <select id="selectByActivityIdAndMemberId" resultMap="AttendanceMap">
+    select
+    <include refid="BaseColumns"/>
+    from attendances
+    where activity_id = #{activityId}
+      and member_id = #{memberId}
+    order by attendance_time desc
+    limit 1
+  </select>
+
+  <insert id="insert" parameterType="com.example.club.domain.Attendance" useGeneratedKeys="true" keyProperty="id">
+    insert into attendances (
+      club_id, activity_id, member_id, attendance_type, attendance_time, remark,
+      exception_flag, exception_status, exception_reason
+    ) values (
+      #{clubId}, #{activityId}, #{memberId}, #{attendanceType}, #{attendanceTime}, #{remark},
+      ifnull(#{exceptionFlag}, 0), ifnull(#{exceptionStatus}, 0), #{exceptionReason}
+    )
+  </insert>
+
+  <select id="selectForExport" resultMap="AttendanceMap">
+    select
+    <include refid="BaseColumns"/>
+    from attendances
+    <where>
+      <if test="clubId != null">
+        and club_id = #{clubId}
+      </if>
+      <if test="activityId != null">
+        and activity_id = #{activityId}
+      </if>
+      <if test="memberId != null">
+        and member_id = #{memberId}
+      </if>
+      <if test="startTime != null">
+        and attendance_time &gt;= #{startTime}
+      </if>
+      <if test="endTime != null">
+        and attendance_time &lt;= #{endTime}
+      </if>
+    </where>
+    order by attendance_time desc
+  </select>
+
+  <select id="selectSummary" resultType="com.example.club.dto.attendance.AttendanceStatsRow">
+    select
+      null as ref_id,
+      'summary' as ref_name,
+      count(1) as total_count,
+      sum(case when attendance_type = 1 then 1 else 0 end) as normal_count,
+      sum(case when attendance_type = 2 then 1 else 0 end) as late_count,
+      sum(case when attendance_type = 3 then 1 else 0 end) as leave_early_count,
+      sum(case when attendance_type = 4 then 1 else 0 end) as absent_count,
+      sum(case when exception_flag = 1 then 1 else 0 end) as exception_count
+    from attendances
+    <where>
+      <if test="clubId != null">
+        and club_id = #{clubId}
+      </if>
+      <if test="activityId != null">
+        and activity_id = #{activityId}
+      </if>
+      <if test="memberId != null">
+        and member_id = #{memberId}
+      </if>
+      <if test="startTime != null">
+        and attendance_time &gt;= #{startTime}
+      </if>
+      <if test="endTime != null">
+        and attendance_time &lt;= #{endTime}
+      </if>
+    </where>
+  </select>
+
+  <select id="selectStatsByMember" resultType="com.example.club.dto.attendance.AttendanceStatsRow">
+    select
+      a.member_id as ref_id,
+      coalesce(u.username, concat('member-', a.member_id)) as ref_name,
+      count(1) as total_count,
+      sum(case when a.attendance_type = 1 then 1 else 0 end) as normal_count,
+      sum(case when a.attendance_type = 2 then 1 else 0 end) as late_count,
+      sum(case when a.attendance_type = 3 then 1 else 0 end) as leave_early_count,
+      sum(case when a.attendance_type = 4 then 1 else 0 end) as absent_count,
+      sum(case when a.exception_flag = 1 then 1 else 0 end) as exception_count
+    from attendances a
+      join members m on a.member_id = m.id
+      left join users u on m.user_id = u.id
+    where a.club_id = #{clubId}
+    <if test="startTime != null">
+      and a.attendance_time &gt;= #{startTime}
+    </if>
+    <if test="endTime != null">
+      and a.attendance_time &lt;= #{endTime}
+    </if>
+    group by a.member_id, u.username
+    order by total_count desc
+    limit 50
+  </select>
+
+  <select id="selectStatsByActivity" resultType="com.example.club.dto.attendance.AttendanceStatsRow">
+    select
+      a.activity_id as ref_id,
+      coalesce(
+        act.activity_name,
+        case when a.activity_id is null then '日常考勤' else concat('活动-', a.activity_id) end
+      ) as ref_name,
+      count(1) as total_count,
+      sum(case when a.attendance_type = 1 then 1 else 0 end) as normal_count,
+      sum(case when a.attendance_type = 2 then 1 else 0 end) as late_count,
+      sum(case when a.attendance_type = 3 then 1 else 0 end) as leave_early_count,
+      sum(case when a.attendance_type = 4 then 1 else 0 end) as absent_count,
+      sum(case when a.exception_flag = 1 then 1 else 0 end) as exception_count
+    from attendances a
+      left join activities act on a.activity_id = act.id
+    where a.club_id = #{clubId}
+    <if test="startTime != null">
+      and a.attendance_time &gt;= #{startTime}
+    </if>
+    <if test="endTime != null">
+      and a.attendance_time &lt;= #{endTime}
+    </if>
+    group by a.activity_id, act.activity_name
+    order by total_count desc
+    limit 50
+  </select>
+
+  <select id="selectStatsByDate" resultType="com.example.club.dto.attendance.AttendanceStatsRow">
+    select
+      null as ref_id,
+      date_format(a.attendance_time, '%Y-%m-%d') as ref_name,
+      count(1) as total_count,
+      sum(case when a.attendance_type = 1 then 1 else 0 end) as normal_count,
+      sum(case when a.attendance_type = 2 then 1 else 0 end) as late_count,
+      sum(case when a.attendance_type = 3 then 1 else 0 end) as leave_early_count,
+      sum(case when a.attendance_type = 4 then 1 else 0 end) as absent_count,
+      sum(case when a.exception_flag = 1 then 1 else 0 end) as exception_count
+    from attendances a
+    where a.club_id = #{clubId}
+    <if test="startTime != null">
+      and a.attendance_time &gt;= #{startTime}
+    </if>
+    <if test="endTime != null">
+      and a.attendance_time &lt;= #{endTime}
+    </if>
+    group by date_format(a.attendance_time, '%Y-%m-%d')
+    order by ref_name desc
+    limit 30
+  </select>
+
+  <update id="markException">
+    update attendances
+    set exception_flag = 1,
+        exception_status = 0,
+        exception_reason = #{reason}
+    where id = #{id}
+  </update>
+
+  <update id="resolveException">
+    update attendances
+    set exception_flag = 1,
+        exception_status = 1,
+        exception_reason = #{reason},
+        handled_by = #{handledBy},
+        handled_time = #{handledTime}
+    where id = #{id}
+  </update>
+
+</mapper>
+
